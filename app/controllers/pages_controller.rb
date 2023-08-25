@@ -4,9 +4,13 @@ class PagesController < ApplicationController
   def home
     @spaceships = Spaceship.all
     if params[:query].present?
-      sql_subquery = "name ILIKE :query OR description ILIKE :query OR ILIKE :model"
+      sql_subquery = "name ILIKE :query OR description ILIKE :query OR model ILIKE :query"
       @spaceships = @spaceships.where(sql_subquery, query: "%#{params[:query]}%")
     end
+
+    # if params[:query].present?
+    #   @spaceships.search_by_name_and_description_and_model(params[:query])
+    # end
   end
 
   def dashboard
