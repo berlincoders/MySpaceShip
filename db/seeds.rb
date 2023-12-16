@@ -1,9 +1,5 @@
 require 'faker'
 
-# user = User.create(
-#   email: "bla@blah.com",
-#   password: "123456"
-# )
 Spaceship.destroy_all
 
 # Create users
@@ -32,23 +28,13 @@ spaceship_image_paths = [
 ]
 
 spaceship_image_paths.each do |image_path|
-  new_spaceship = Spaceship.create(
+  Spaceship.create!(
     name: Faker::Space.constellation,
     model: Faker::Space.star_cluster,
     description: Faker::Company.catch_phrase,
     daily_rate: rand(1000.0..10_000.0).round(2),
-
-    user: users.sample
-    # Assign a user_id to the spaceship, adjust as needed
-    user_id: User.all.pluck(:id).sample
+    user: users.sample,
+    # Attach the local image to the spaceship
+    photo: File.open(image_path, 'rb')
   )
-
-  # Attach the local image to the spaceship
-  File.open(image_path, 'rb') do |file|
-    new_spaceship.photo.attach(io: file, filename: File.basename(image_path), content_type: "image/jpg")
-  end
-
-
-  new_spaceship.save
-
 end
