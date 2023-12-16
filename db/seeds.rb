@@ -1,16 +1,28 @@
+# This file should contain all the record creation needed to seed the database with its default values.
+# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
+#
+# Examples:
+#
+#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
+#   Character.create(name: "Luke", movie: movies.first)
+
 require 'faker'
 
+# user = User.create(
+#   email: "bla@blah.com",
+#   password: "123456"
+# )
+
+# 12.times do
+#   User.create(
+#   email: Faker::Internet.email,
+#   password: "123456"
+# )
+# end
+
+# User.destroy_all
 Spaceship.destroy_all
 
-# Create users
-users = []
-12.times do
-  user = User.create(
-    email: Faker::Internet.email,
-    password: "123456"
-  )
-  users << user
-end
 
 spaceship_image_paths = [
   "app/assets/images/spaceships/spaceship_01.jpg",
@@ -28,13 +40,19 @@ spaceship_image_paths = [
 ]
 
 spaceship_image_paths.each do |image_path|
-  Spaceship.create!(
+  new_spaceship = Spaceship.create(
     name: Faker::Space.constellation,
     model: Faker::Space.star_cluster,
     description: Faker::Company.catch_phrase,
     daily_rate: rand(1000.0..10_000.0).round(2),
-    user: users.sample,
-    # Attach the local image to the spaceship
-    photo: File.open(image_path, 'rb')
+    # Assign a user_id to the spaceship, adjust as needed
+    user_id: User.all.pluck(:id).sample
   )
+
+  # Attach the local image to the spaceship
+  File.open(image_path, 'rb') do |file|
+    new_spaceship.photo.attach(io: file, filename: File.basename(image_path), content_type: "image/jpg")
+  end
+
+  new_spaceship.save
 end
