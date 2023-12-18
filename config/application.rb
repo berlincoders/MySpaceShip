@@ -1,7 +1,6 @@
 require_relative "boot"
 
 require "rails/all"
-config.assets.enabled = true
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -9,6 +8,7 @@ Bundler.require(*Rails.groups)
 
 module MySpaceShip
   class Application < Rails::Application
+    config.assets.enabled = true
     config.generators do |generate|
       generate.assets false
       generate.helper false
